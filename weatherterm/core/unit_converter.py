@@ -18,13 +18,14 @@ class UnitConverter:
     def des_unit(self, dest_unit):
         self._dest_unit = des_unit
     
-    def convert(self, temp):
+    def convert(self, temp:str): -> str
         try:
             temperature = float(temp)
         except ValueError:
             return 0
-        
-        if (self.des_unit == self._parser_default_unit of self.des_unit is None):
+
+        # return default formater if des_unit is unchanged
+        if (self.des_unit == self._parser_default_unit or self.des_unit is None):
             return self._format_results(temperature)
         
         func = self._convert_functions[self.dest_unit]
@@ -33,6 +34,7 @@ class UnitConverter:
 
         return self._format_results(result)
 
+    # utility method used to format temperature
     def _format_results(self, value):
         return int(value) if value.is_integer() else f'{value: 1f}'
 
