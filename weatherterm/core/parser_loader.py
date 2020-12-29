@@ -25,7 +25,6 @@ def _get_parser_list(dirname):
 
 
 def _import_parsers(parserfiles):
-    
     m = re.compile('.+parser$', re.I)
     _modules = __import__(
         'weatherterm.parsers',
@@ -49,5 +48,6 @@ def _import_parsers(parserfiles):
 
 
 def load(dirname):
+    # Entry point of parser_loader
     parserfiles = _get_parser_list(dirname)
     return _import_parsers(parserfiles)

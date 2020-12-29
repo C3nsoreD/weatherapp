@@ -6,6 +6,7 @@ from weatherterm.core import ForecastType
 from weatherterm.core import Unit
 from weatherterm.core import SetUnitAction
 
+
 def _validate_forecast_args(args):
     if args.forecast_option is None:
         err_msg = ('one of these arguments must be used: '
@@ -13,7 +14,7 @@ def _validate_forecast_args(args):
         print(f'{argparser.prog}: error: {err_msg}', file=sys.stderr)
         sys.exit()
     
-parser = parser_loader('./weatherterm/parsers')
+parsers = parser_loader.load('./weatherterm/parsers')
 
 argparser = ArgumentParser(
     prog='weatherterm',
@@ -39,7 +40,7 @@ argparser.add_argument(
     choices=unit_values,
     required=False,
     dest='unit',
-    action=SetUnitAction
+    action=SetUnitAction,
     help=('Specify the unit that will be used to display the temperature')
 )
 
