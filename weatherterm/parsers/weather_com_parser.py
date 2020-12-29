@@ -76,7 +76,8 @@ class WeatherComParser:
             'today_nowcard-hilo': 'div',
         }
         content = self._request.fetch_data(args.forecast_option.value, args.area_code)
-
+        
+        ## BS returns an html file
         bs = BeautifulSoup(content, 'html.parser')
 
         container = bs.find('section', class_='today_nowcard-container')
@@ -88,14 +89,17 @@ class WeatherComParser:
         
         weatherinfo = weather_conditions[0]
     
+        ## The regex explained: 
+        # Look for `H` followed by some spaces, and then a grouped value which is either a number
+        # or a maximum of two dash symbols
         temp_regex = re.compile(
             ('H\s+(\d+|\-{,2}).+', 'L\s+(\d+|\-{,2}).+')
         )
         temp_info = temp_regex.search(weatherinfo['today_nowcard-hilo'])
         high_temp, low_temp = temp_info.groups()        
         
-        side = container.find('div', class_='today_nowcard-sidebar')
-        humidity, wind = self._get_additional_info(side)
+        side = container.find('div', class_='today_nowcard-sidecar')
+        wind, humidity = self._get_additional_info(side)
 
         curr_temp = self._clear_str_number(weatherinfo['today_nowcard-temp'])
 
