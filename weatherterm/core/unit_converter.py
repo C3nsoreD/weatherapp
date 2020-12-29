@@ -18,7 +18,7 @@ class UnitConverter:
     def des_unit(self, dest_unit):
         self._dest_unit = des_unit
     
-    def convert(self, temp:str): -> str
+    def convert(self, temp:str) -> str: 
         try:
             temperature = float(temp)
         except ValueError:
