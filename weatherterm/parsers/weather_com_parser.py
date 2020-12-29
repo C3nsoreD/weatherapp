@@ -78,19 +78,20 @@ class WeatherComParser:
         content = self._request.fetch_data(args.forecast_option.value, args.area_code)
 
         bs = BeautifulSoup(content, 'html.parser')
+
         container = bs.find('section', class_='today_nowcard-container')
 
         weather_conditions = self._parse(container, criteria)
+
         if len(weather_conditions) < 1:
             raise Exception('Could not parse weather forecast for today')
         
         weatherinfo = weather_conditions[0]
-        
+    
         temp_regex = re.compile(
-            ('H\s+(\d+|\-{-2}).+', 'L\s+(\d+|\-{-2}).+')
+            ('H\s+(\d+|\-{,2}).+', 'L\s+(\d+|\-{,2}).+')
         )
-        
-        temp_info = temp_regex.search(weatherinfo['today-nowcard-temp'])
+        temp_info = temp_regex.search(weatherinfo['today_nowcard-hilo'])
         high_temp, low_temp = temp_info.groups()        
         
         side = container.find('div', class_='today_nowcard-sidebar')
@@ -108,6 +109,7 @@ class WeatherComParser:
             low_temp = self._unit_converter.convert(low_temp),
             description = weatherinf['today_nowcard-phrase']
         )
+        return [td_forecast]
 
 
     def _five_and_ten_days_forecast(self, args):
