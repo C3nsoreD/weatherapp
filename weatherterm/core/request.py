@@ -1,17 +1,18 @@
 import os 
-from selenium import webdriver 
+from selenium import webdriver
 
 class Request:
 
     def __init__(self, base_url):
-        path = os.getcwd().split('/')[:-1]
-        _path = '/'.join(path)
-        # /home/pi/Desktop/Web_project/weatherapp/phantomjs
+        # path = os.getcwd().split('/')[:-1]
+        # _path = '/'.join(path)
         self._phantomjs_path_local = '/usr/bin/phantomjs'
-        # self._phantomjs_path = os.path.join('/home/pi/Desktop/Web_project/weatherapp/phantomjs')
-        # self._phantomjs_path = os.path.join(os.curdir, 'phantomjs/bin/phantomjs')
         self._base_url = base_url
-        self._driver = webdriver.PhantomJS(executable_path=self._phantomjs_path_local)
+        # self._driver = webdriver.Chrome() # Chromium-driver
+        self._driver = webdriver.PhantomJS(excutable_path=self._phantomjs_path_local)
+       
+        # self._driver.add_argument("--remote-debugging-port=9222")
+        
         # self._driver = webdriver.PhantomJS(self._phantomjs_path)
     
     def fetch_data(self, forecast, area):
