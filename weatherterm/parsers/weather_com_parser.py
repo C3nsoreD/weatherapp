@@ -154,12 +154,12 @@ class WeatherComParser:
 
 
 
-    def _parse_list_forecast(self, contentm args):
+    def _parse_list_forecast(self, content, args):
         criteria = {
             'date-time': 'span',
-            'day-detail': 'span'.
+            'day-detail': 'span',
             'description': 'td',
-            'temp': 'td'
+            'temp': 'td',
             'wind': 'td',
             'humidity': 'td',
         }
@@ -176,7 +176,7 @@ class WeatherComParser:
         self._unit_converter.dest_unit = args.unit
 
         for item in results:
-            match = self._temp_regex.search(items['temp'])
+            match = self._temp_regex.search(item['temp'])
             if match is not None:
                 high_temp, low_temp = match.groups()
 
