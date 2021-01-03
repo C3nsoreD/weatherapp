@@ -7,6 +7,7 @@ from weatherterm.core import Forecast
 from weatherterm.core import Unit 
 from weatherterm.core import UnitConverter
 from weatherterm.core import Request
+from weatherterm.core import Mapper
 
 
 class WeatherComParser:
@@ -111,16 +112,96 @@ class WeatherComParser:
             wind, 
             high_temp = self._unit_converter.convert(high_temp),
             low_temp = self._unit_converter.convert(low_temp),
-            description = weatherinf['today_nowcard-phrase']
+            description = weatherinfo['today_nowcard-phrase']
         )
         return [td_forecast]
 
 
     def _five_and_ten_days_forecast(self, args):
-        raise NotImplementedError()
-
+        content = self._request.fetch_data(args.forecast_option.value, args.area_code)
+        results = self._parse_list_forecast(content, args)
+        
+        return self._prepare_date(results)
+        
+    # Weekend data will be different from today, 5days, 10days
+    # Thus a mapper was built to replace/change the css names 
+    # so that our _parse can work the same way
+    
     def _weekend_forecast(self, args):
-        raise NotImplementedError()
+        criteria - {
+            'weather-ceil': 'header',
+            'temp':'p',
+            'weather-phrase': 'h3',
+            'wind-conditions': 'p',
+            'humidity': 'p',
+        }
+        
+        mapper = Mapper()
+        mapper.remap_key('wind-conditions', 'wind')
+        mapper.remap_key('weather-phrase', 'description')
+        
+        content = self._request.fetch_data(args.forecast_option.value, args.area_code)
+         
+        bs = BeautifulSoup(content, 'html.parser')
+        
+        forecast_data = bs.find('article', class_='ls-mod')
+        container = forecast_data.div.div
+
+        partial_results = self._parse(container, criteria)
+        results = mapper.remap(partial_results)
+
+        return self._prepare_data(results, args)
+
+
+
+    def _parse_list_forecast(self, contentm args):
+        criteria = {
+            'date-time': 'span',
+            'day-detail': 'span'.
+            'description': 'td',
+            'temp': 'td'
+            'wind': 'td',
+            'humidity': 'td',
+        }
+        bs = BeautifulSoup(content, 'html.parser')
+
+        forecast_data = bs.find('table', class_='twc-table')
+        container = forecast_data.tbody
+        
+        return self._parse(container, criteria)
+
+    def _prepare_data(self, results, args):
+        forecast_result = []
+
+        self._unit_converter.dest_unit = args.unit
+
+        for item in results:
+            match = self._temp_regex.search(items['temp'])
+            if match is not None:
+                high_temp, low_temp = match.groups()
+
+            try:
+                dateinfo = item['weather-ceil']
+                date_time, day_detail = dateinfo[:3], dateinfo[3:]
+                item['date-time'] = date_time
+                item['day-detail'] = day_detail
+            except KeyError:
+                pass 
+
+            day_forecast = Forecast(    
+                self._unit_converter.convert(item['temp']), 
+                item['humidity'], 
+                item['wind'], 
+                high_temp = self._unit_converter.convert(high_temp),
+                low_temp = self._unit_converter.convert(low_temp),
+                description = item['description'].strip(),
+                forecast_date=f'{item["date-time"]} {item["day-detail"]}',
+                forecast_type=self._forecast_type
+            )
+            forecast_result.append(day_forecast)
+
+        return forecast_result            
+    
     
     def run(self, args):
         self._forecast_type = args.forecast_option
