@@ -1,6 +1,9 @@
 phantomjs/
+
 env/
+
 __pycache__/
 
 *.pyc
+
 TODO
