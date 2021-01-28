@@ -1,6 +1,6 @@
-from datetime import date 
+from datetime import date
 
-from .forecast_type import ForecastType 
+from .forecast_type import ForecastType
 
 class Forecast:
     def __init__(self, current_temp, humdity, wind, high_temp=None, low_temp=None, description='', forecast_date=None, forecast_type=ForecastType.TODAY):
@@ -8,7 +8,7 @@ class Forecast:
         self._high_temp = high_temp
         self._low_temp = low_temp
         self._humidity = humdity
-        self._wind = wind 
+        self._wind = wind
         self._description = description
         self._forecast_type = forecast_type
 
@@ -16,15 +16,15 @@ class Forecast:
             self.forecast_date = date.today()
         else:
             self._forecast_date = forecast_date
-    
+
     @property
     def forecast_date(self):
         return self._forecast_date
-    
+
     @forecast_date.setter
     def forecast_date(self, forecast_date):
         self._forecast_date = forecast_date.strftime("%a %b %d")
-    
+
     @property
     def current_temp(self):
         return self._current_temp
@@ -32,7 +32,7 @@ class Forecast:
     @property
     def humdity(self):
         return self._humidity
-    
+
     @property
     def wind(self):
         return self._wind
@@ -40,24 +40,24 @@ class Forecast:
     @property
     def description(self):
         return self._description
-    
+
     def __str__(self):
         temperature = None
         offset = ' ' * 4
-        
+
         if self._forecast_type == ForecastType.TODAY:
             # \xb0 - unicode hex charater for degrees
             temperature = (
-                f'{offset}{self._current_temp}\xb0\n'
-                f'{offset}High {self._high_temp}\xb0 / '
+                f'{offset} {self._current_temp}\xb0\n'
+                f'{offset} High {self._high_temp}\xb0 / '
                 f'Low {self._low_temp}\xb0 '               
             )
         else:
             temperature = (
                 f'{offset}High {self._high_temp}\xb0 / '
-                f'Low {self._low_temp}\xb0 '               
-            )         
-        
+                f'Low {self._low_temp}\xb0 '
+            )
+
         return (
             f'>> {temperature}\n'
             f'({self._description})\n'
