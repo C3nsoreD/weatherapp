@@ -24,4 +24,4 @@ Currently, Selenium webdrivers need to be fixed. The default choise was PhantomJ
  - Need to look into Selenium 
  - Implement a similar version of application {Bitcoin monitor}
  - Intergrate other applications with terminal features.
-
+ - point
